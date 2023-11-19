@@ -1,24 +1,29 @@
+from openai import OpenAI
 import streamlit as st
 
-from sklearn.datasets import load_iris
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import train_test_split
-import numpy as np
+with st.sidebar:
+    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+    "[Get an OpenAI API key](https://platform.openai.com/account/api-keys)"
+    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/Chatbot.py)"
+    "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
 
-iris = load_iris()
-X = iris.data
-y = iris.target
+st.title("💬 Chatbot Nilson")
+st.caption("🚀 Um chatbot que usa a OpenAI")
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [{"role": "assistant", "content": "Como posso te ajudar?"}]
 
-reg = DecisionTreeClassifier()
-reg.fit(X, y)
+for msg in st.session_state.messages:
+    st.chat_message(msg["role"]).write(msg["content"])
 
-st.write("Meu primeiro site")
+if prompt := st.chat_input():
+    if not openai_api_key:
+        st.info("Please add your OpenAI API key to continue.")
+        st.stop()
 
-comp_pet = st.text_input(label="Comprimento da pétala")
-lag_pet = st.text_input(label="Largura da pétala")
-comp_sep = st.text_input(label="Comprimento da sépala")
-lag_sep = st.text_input(label="Largura da  sépala")
-
-if st.button("Prever Tipo Flor"):
-	resultado = reg.predict([[comp_pet, lag_pet, comp_sep, lag_sep]])
-	st.write("O Tipo da flor é: {}".format(resultado))
+    client = OpenAI(api_key=openai_api_key)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    st.chat_message("user").write(prompt)
+    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
+    msg = response.choices[0].message.content
+    st.session_state.messages.append({"role": "assistant", "content": msg})
+    st.chat_message("assistant").write(msg)
