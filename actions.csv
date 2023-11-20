@@ -1,0 +1,20 @@
+entrada,action
+"qual o meu endereco","ENDERECO"
+"onde vcs estao","ENDERECO"
+"como posso ir ate ai","ENDERECO"
+"me informe o numero do processo", "INFORMACAO_PROCESSO"
+"quero saber como anda o meu processo","INFORMACAO_PROCESSO"
+"me tire duvidas do meu processo","INFORMACAO_PROCESSO"
+"Ate logo","SAIR"
+"obrigado","SAIR"
+"bye","SAIR"
+"me conte uma piada","PIADA"
+"estou triste","PIADA"
+"me fale algo engracao","PIADA"
+
+
+
+
+
+
+
